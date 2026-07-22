@@ -22,7 +22,7 @@ const products = [
     selling: "鸡肉配少量南瓜，柔软好撕，入口温和。适合幼宠、老年宠和偏爱软口感的毛孩子。",
     ingredients: "鲜鸡胸肉 88%、南瓜 10%、木薯淀粉 2%",
     pet: "全犬种及成猫",
-    image: "assets/images/chicken.png",
+    image: "assets/images/pumpkin-chicken.png",
     badge: "柔软易嚼"
   },
   {
@@ -48,7 +48,7 @@ const products = [
     selling: "浓郁肉香，一小块就能给到高满足感。细切小方，训练时不脏手。",
     ingredients: "新鲜牛肝 100%",
     pet: "4 月龄以上犬猫",
-    image: "assets/images/freeze-dried.png",
+    image: "assets/images/beef-liver.png",
     badge: "高适口性"
   },
   {
@@ -74,7 +74,7 @@ const products = [
     selling: "柔韧扭纹增加咀嚼接触面，淡淡奶香提升接受度。硬度适中，日常洁齿更轻松。",
     ingredients: "米粉、山羊奶粉、甘油、纤维素",
     pet: "成年犬",
-    image: "assets/images/dental.png",
+    image: "assets/images/goat-dental.png",
     badge: "耐嚼不粘牙"
   },
   {
@@ -100,8 +100,60 @@ const products = [
     selling: "小巧心形，一口一个。用牛肉香气快速抓住注意力，召回和定点训练都顺手。",
     ingredients: "鲜牛肉 82%、燕麦粉、甜菜根粉",
     pet: "3 月龄以上犬只",
-    image: "assets/images/training.png",
+    image: "assets/images/beet-beef.png",
     badge: "低负担奖励"
+  },
+  {
+    id: "duck-medallions",
+    name: "原切鸭胸圆片",
+    category: "鸭肉",
+    price: 43,
+    monthlySales: 744,
+    spec: "90g",
+    selling: "鲜鸭胸切成厚薄均匀的小圆片，低温烘到柔韧耐嚼。肉香温和，换换口味正合适。",
+    ingredients: "鲜鸭胸肉 99%、迷迭香提取物",
+    pet: "3 月龄以上犬猫",
+    image: "assets/images/duck.png",
+    badge: "低敏肉源"
+  },
+  {
+    id: "salmon-freeze",
+    name: "冻干三文鱼粒",
+    category: "海味",
+    price: 56,
+    monthlySales: 689,
+    spec: "70g",
+    selling: "整块三文鱼真空冻干，保留鱼肉纹理与鲜香。富含天然鱼油，拌粮也很出彩。",
+    ingredients: "三文鱼肉 100%",
+    pet: "犬猫通用",
+    image: "assets/images/salmon.png",
+    badge: "亮泽毛发"
+  },
+  {
+    id: "goat-cheese",
+    name: "山羊奶酪小方",
+    category: "奶酪",
+    price: 38,
+    monthlySales: 512,
+    spec: "85g",
+    selling: "浓缩山羊奶做成柔韧小方，奶香自然不甜腻。小块好控制，适合日常奖励。",
+    ingredients: "山羊奶、乳清蛋白、木薯淀粉",
+    pet: "4 月龄以上犬只",
+    image: "assets/images/goat-cheese.png",
+    badge: "自然奶香"
+  },
+  {
+    id: "pumpkin-biscuit",
+    name: "南瓜燕麦爪爪饼",
+    category: "烘焙",
+    price: 28,
+    monthlySales: 931,
+    spec: "120g",
+    selling: "南瓜与燕麦慢火烘焙，酥脆但不硌牙。爪印与小骨头造型，让奖励更有仪式感。",
+    ingredients: "燕麦粉、南瓜泥、鸡蛋、椰子油",
+    pet: "全犬种",
+    image: "assets/images/pumpkin-biscuit.png",
+    badge: "轻负担烘焙"
   }
 ];
 
@@ -111,7 +163,7 @@ const STORAGE_KEYS = {
   cart: "heye_cart_v1"
 };
 
-const categoryLabels = ["全部", "鸡肉", "冻干", "洁齿", "训练奖励"];
+const categoryLabels = ["全部", "鸡肉", "冻干", "洁齿", "训练奖励", "鸭肉", "海味", "奶酪", "烘焙"];
 const state = { category: "全部", cart: loadCart(), selectedId: null };
 
 const productGrid = document.querySelector("#productGrid");
