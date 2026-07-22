@@ -426,3 +426,147 @@ footer p { margin: 0; }
 @media (max-width: 600px) {
   .mobile-cart-bar:not([hidden]) + .toast { bottom: calc(max(14px, env(safe-area-inset-bottom)) + 76px); max-width: calc(100vw - 28px); text-align: center; }
 }
+/* Warm editorial refresh */
+:root {
+  --ink: #342b27;
+  --ink-soft: #74655d;
+  --sage: #8da07f;
+  --sage-light: #e7eedf;
+  --cream: #f8f0e4;
+  --white: #fffaf3;
+  --berry: #db765f;
+  --berry-light: #f6d8cd;
+  --blue-light: #dcebf2;
+  --line: #e5d8cb;
+  --shadow: 0 18px 48px rgba(91, 66, 52, .14);
+}
+body { background: #fffaf3; }
+.site-header {
+  height: 76px;
+  background: rgba(255, 250, 243, .96);
+  border-color: rgba(96, 72, 58, .1);
+}
+.brand { font-family: "STSong", "SimSun", serif; font-size: 18px; }
+.brand-mark { border-radius: 12px 12px 12px 4px; background: var(--berry); }
+.nav-links a { position: relative; font-weight: 700; }
+.nav-links a::after { content: ""; position: absolute; left: 50%; right: 50%; bottom: -10px; height: 2px; background: var(--berry); transition: left .2s ease, right .2s ease; }
+.nav-links a:hover::after { left: 0; right: 0; }
+.cart-count { background: var(--berry); }
+.button { border-radius: 999px; }
+.button-primary { background: var(--berry); }
+.button-primary:hover { background: #c8624c; }
+.hero {
+  width: min(1420px, calc(100% - 40px));
+  min-height: 650px;
+  height: auto;
+  max-height: none;
+  margin: 20px auto 0;
+  padding: 56px 38px 44px max(42px, calc((100% - 1320px) / 2));
+  display: grid;
+  grid-template-columns: minmax(330px, .78fr) minmax(500px, 1.35fr) 190px;
+  gap: 26px;
+  align-items: center;
+  overflow: visible;
+  background: #f8f0e4;
+  border-radius: 34px;
+}
+.hero-content { width: auto; margin: 0; color: var(--ink); position: relative; z-index: 2; }
+.hero-content .eyebrow { color: var(--sage); }
+.hero h1 { margin-bottom: 22px; font-size: clamp(56px, 5.5vw, 88px); font-weight: 700; }
+.hero h1 em { color: var(--berry); font-style: normal; }
+.hero-copy { max-width: 440px; margin-bottom: 28px; color: var(--ink-soft); font-size: 17px; line-height: 1.9; }
+.hero .button-primary { color: #fff; background: var(--berry); }
+.hero .button-light { color: var(--ink); background: transparent; border-color: #bba99c; }
+.hero-notes { margin-top: 30px; gap: 18px; color: var(--ink-soft); }
+.hero-notes li::before { background: var(--sage); }
+.hero-photo { position: relative; min-width: 0; margin: 0; }
+.hero-photo img { aspect-ratio: 1.22 / 1; object-fit: cover; object-position: center; border-radius: 46% 46% 24px 24px; box-shadow: var(--shadow); }
+.hero-photo figcaption { position: absolute; right: -12px; top: -24px; width: 178px; padding: 17px 18px; color: var(--ink-soft); background: #fffdf8; border: 1px solid var(--line); box-shadow: 0 12px 28px rgba(91,66,52,.1); font-family: "STSong", "SimSun", serif; font-size: 14px; line-height: 1.65; transform: rotate(2deg); }
+.hero-pets { display: grid; gap: 22px; align-self: stretch; align-content: center; }
+.pet-portrait { border: 0; padding: 0; color: var(--ink); background: transparent; cursor: pointer; text-align: center; }
+.pet-portrait img { aspect-ratio: 1; object-fit: cover; border-radius: 50%; border: 8px solid #e2ead8; transition: transform .25s ease; }
+.pet-portrait-dog img { border-color: var(--blue-light); }
+.pet-portrait:hover img { transform: rotate(-3deg) scale(1.04); }
+.pet-portrait span { display: grid; margin-top: 8px; }
+.pet-portrait small { color: var(--ink-soft); font-size: 9px; letter-spacing: .15em; }
+.pet-portrait strong { font-family: "STSong", "SimSun", serif; font-size: 20px; }
+.pet-picker {
+  max-width: var(--container);
+  margin: 30px auto 0;
+  padding: 25px 26px;
+  display: grid;
+  grid-template-columns: 1.1fr repeat(3, 1fr);
+  gap: 14px;
+  align-items: center;
+  background: #fffdf8;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  box-shadow: 0 12px 34px rgba(91,66,52,.07);
+}
+.pet-picker h2 { margin: 0; font-size: 30px; }
+.pet-picker .eyebrow { margin-bottom: 5px; }
+.pet-picker button { min-height: 88px; padding: 10px 14px; display: flex; align-items: center; gap: 13px; border: 0; border-radius: 20px; color: var(--ink); background: var(--sage-light); cursor: pointer; text-align: left; transition: transform .2s ease, box-shadow .2s ease; }
+.pet-picker button:nth-of-type(2) { background: var(--blue-light); }
+.pet-picker button:hover { transform: translateY(-3px); box-shadow: 0 10px 22px rgba(91,66,52,.1); }
+.pet-picker img { width: 66px; height: 66px; object-fit: cover; border-radius: 50%; }
+.pet-picker span { display: grid; }
+.pet-picker strong { font-family: "STSong", "SimSun", serif; font-size: 19px; }
+.pet-picker small { color: var(--ink-soft); font-size: 11px; }
+.pet-picker .pet-picker-all { justify-content: space-between; background: var(--berry-light); }
+.pet-picker-all b { font-size: 28px; font-weight: 400; }
+.trust-strip { margin-top: 22px; border-top: 1px dashed var(--line); border-bottom: 1px dashed var(--line); }
+.bestsellers-section { padding-top: 72px; }
+.bestseller-card, .recommendation-card, .product-image-wrap, .product-empty { border-radius: 20px; }
+.bestseller-card { background: #f5ebde; border: 1px solid var(--line); }
+.bestseller-image img { border-radius: 20px 0 0 20px; }
+.rank-badge { border-radius: 999px; }
+.recommendation-card { overflow: hidden; border: 1px solid var(--line); background: #fffdf8; box-shadow: 0 12px 28px rgba(91,66,52,.07); }
+.products-section { margin-top: 78px; padding-top: 70px; background: #f8f0e4; border-radius: 50px 50px 0 0; }
+.filter-groups { border-style: dashed; }
+.filter-button { border-radius: 999px; }
+.product-card { padding: 12px 12px 18px; border: 1px solid transparent; border-radius: 24px; transition: background .2s ease, border-color .2s ease, transform .2s ease; }
+.product-card:hover { transform: translateY(-5px); background: #fffdf8; border-color: var(--line); }
+.product-image-wrap { border-radius: 20px; }
+.product-badge { border-radius: 999px; }
+.quick-add { border-radius: 50%; background: var(--berry); }
+.product-search-field input, .product-sort select { border-radius: 14px; background: #fffdf8; }
+.story-band { background: #8fa083; }
+footer { background: #f5e9dc; }
+.mobile-cart-bar:not([hidden]) { border-radius: 22px; background: var(--berry); }
+
+@media (max-width: 1100px) {
+  .hero { grid-template-columns: minmax(290px, .8fr) minmax(420px, 1.2fr); }
+  .hero-pets { grid-column: 1 / -1; grid-template-columns: repeat(2, 150px); justify-content: center; }
+  .pet-picker { grid-template-columns: repeat(3, 1fr); }
+  .pet-picker > div { grid-column: 1 / -1; text-align: center; }
+}
+@media (max-width: 760px) {
+  .site-header { height: 64px; }
+  .hero { width: calc(100% - 24px); margin-top: 12px; padding: 34px 18px 24px; grid-template-columns: 1fr; gap: 24px; border-radius: 26px; }
+  .hero-content { order: 1; }
+  .hero-photo { order: 2; }
+  .hero-pets { order: 3; grid-column: auto; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .hero h1 { font-size: clamp(46px, 15vw, 68px); }
+  .hero-copy { font-size: 15px; }
+  .hero-photo img { aspect-ratio: 1.1 / 1; border-radius: 40% 40% 20px 20px; object-position: 58% center; }
+  .hero-photo figcaption { right: 8px; top: -18px; width: 150px; padding: 12px; font-size: 12px; }
+  .pet-portrait { display: grid; grid-template-columns: 76px 1fr; gap: 10px; align-items: center; text-align: left; background: #fffdf8; border-radius: 18px; padding: 9px; }
+  .pet-portrait img { border-width: 5px; }
+  .pet-picker { margin: 18px 12px 0; padding: 20px 14px; grid-template-columns: 1fr; border-radius: 22px; }
+  .pet-picker > div { grid-column: auto; }
+  .pet-picker h2 { font-size: 28px; }
+  .trust-strip { margin-top: 18px; }
+  .products-section { margin-top: 58px; padding-top: 58px; border-radius: 32px 32px 0 0; }
+}
+@media (max-width: 600px) {
+  .header-actions { gap: 10px; }
+  .admin-entry { display: none; }
+  .hero-actions { display: grid; grid-template-columns: 1fr 1fr; }
+  .hero-actions .button { min-width: 0; padding: 0 12px; }
+  .hero-notes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; font-size: 10px; }
+  .hero-notes li::before { margin-right: 5px; }
+  .product-card { padding: 9px 9px 15px; }
+}
+
+.hero-photo img { aspect-ratio: 2.15 / 1; border-radius: 30px; object-position: center; }
+@media (max-width: 760px) { .hero-photo img { aspect-ratio: 1.72 / 1; border-radius: 24px; } }

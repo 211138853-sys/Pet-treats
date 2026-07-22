@@ -579,6 +579,18 @@ foodFilters.addEventListener("click", event => {
   renderFilters();
   renderProducts();
 });
+document.querySelectorAll("[data-pet-shortcut]").forEach(button => {
+  button.addEventListener("click", () => {
+    state.petType = button.dataset.petShortcut;
+    state.category = "全部食品";
+    state.query = "";
+    productSearch.value = "";
+    clearProductSearch.hidden = true;
+    renderFilters();
+    renderProducts();
+    document.querySelector("#products").scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+});
 productSearch.addEventListener("input", event => {
   state.query = event.target.value;
   renderProducts();
