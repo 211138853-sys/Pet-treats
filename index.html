@@ -17,10 +17,13 @@
       <a href="#products">全部零食</a>
       <a href="#promise">选材标准</a>
     </nav>
-    <button class="cart-button" id="openCart" type="button" aria-label="打开购物车">
-      <span aria-hidden="true">购物袋</span>
-      <span class="cart-count" id="cartCount">0</span>
-    </button>
+    <div class="header-actions">
+      <a class="account-link" id="accountLink" href="account.html"><span class="account-dot" aria-hidden="true"></span><span id="accountLabel">登录 / 注册</span></a>
+      <button class="cart-button" id="openCart" type="button" aria-label="打开购物车">
+        <span aria-hidden="true">购物袋</span>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </div>
   </header>
 
   <main>
@@ -124,12 +127,36 @@
     </aside>
   </div>
 
+  <div class="overlay" id="addressOverlay" hidden>
+    <section class="modal address-modal" role="dialog" aria-modal="true" aria-labelledby="addressTitle">
+      <button class="icon-button modal-close" type="button" data-close="addressOverlay" aria-label="关闭收货信息">×</button>
+      <div class="address-heading">
+        <p class="eyebrow ink">DELIVERY DETAILS</p>
+        <h2 id="addressTitle">确认收货信息</h2>
+        <p>地址会保存到当前账户，下次结算自动填写。</p>
+      </div>
+      <form class="address-form" id="addressForm">
+        <div class="address-row">
+          <label><span>收货人</span><input id="addressRecipient" type="text" autocomplete="name" maxlength="20" placeholder="请输入姓名" required></label>
+          <label><span>联系电话</span><input id="addressPhone" type="tel" inputmode="numeric" autocomplete="tel" maxlength="11" placeholder="11 位手机号" required></label>
+        </div>
+        <label><span>所在地区</span><input id="addressRegion" type="text" autocomplete="address-level1" maxlength="50" placeholder="例如：山东省 济南市 历下区" required></label>
+        <label><span>详细地址</span><textarea id="addressDetail" autocomplete="street-address" maxlength="120" placeholder="街道、门牌号、小区和单元" required></textarea></label>
+        <p class="address-error" id="addressError" role="alert"></p>
+        <div class="address-submit-row">
+          <div><small>本次应付</small><strong id="addressTotal">¥0</strong></div>
+          <button class="button button-primary" type="submit">保存地址并提交订单</button>
+        </div>
+      </form>
+    </section>
+  </div>
   <div class="overlay" id="successOverlay" hidden>
     <section class="modal success-modal" role="dialog" aria-modal="true" aria-labelledby="successTitle">
       <div class="success-mark" aria-hidden="true">✓</div>
       <p class="eyebrow ink">ORDER CONFIRMED</p>
       <h2 id="successTitle">下单成功</h2>
       <p>这份心意已经打包出发。愿它吃得开心，也陪你更久一点。</p>
+      <p class="success-address" id="successAddress"></p>
       <button class="button button-primary" type="button" data-close="successOverlay">继续逛逛</button>
     </section>
   </div>

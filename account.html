@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="禾野宠食用户登录、注册与收货信息管理。">
+  <title>账户中心｜禾野宠食</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="account.css">
+</head>
+<body class="account-page">
+  <header class="account-header">
+    <a class="brand" href="index.html" aria-label="返回禾野宠食首页">
+      <span class="brand-mark">禾</span>
+      <span>禾野宠食</span>
+    </a>
+    <a class="back-home" href="index.html">返回选购</a>
+  </header>
+
+  <main class="account-shell">
+    <section class="account-intro">
+      <img src="assets/images/hero.png" alt="宠物与天然零食">
+      <div class="account-intro-shade"></div>
+      <div class="account-intro-copy">
+        <p class="eyebrow">HEYE MEMBERS</p>
+        <h1>把它的偏爱，<br>和你的地址一起记住。</h1>
+        <p>登录后保存常用收货信息，下次结算不用重复填写。</p>
+      </div>
+    </section>
+
+    <section class="account-panel" aria-live="polite">
+      <div id="authView">
+        <div class="account-tabs" role="tablist" aria-label="账户操作">
+          <button class="account-tab active" id="loginTab" type="button" role="tab" aria-selected="true">登录</button>
+          <button class="account-tab" id="registerTab" type="button" role="tab" aria-selected="false">注册</button>
+        </div>
+
+        <form class="account-form" id="loginForm">
+          <div class="form-heading">
+            <p class="eyebrow ink">WELCOME BACK</p>
+            <h2>欢迎回来</h2>
+            <p>登录后继续完成你的订单。</p>
+          </div>
+          <label><span>手机号</span><input id="loginPhone" type="tel" inputmode="numeric" autocomplete="tel" maxlength="11" placeholder="请输入 11 位手机号" required></label>
+          <label><span>密码</span><input id="loginPassword" type="password" autocomplete="current-password" minlength="6" placeholder="请输入密码" required></label>
+          <p class="form-error" id="loginError" role="alert"></p>
+          <button class="button button-primary account-submit" type="submit">登录账户</button>
+        </form>
+
+        <form class="account-form" id="registerForm" hidden>
+          <div class="form-heading">
+            <p class="eyebrow ink">JOIN HEYE</p>
+            <h2>创建账户</h2>
+            <p>注册后即可保存收货地址。</p>
+          </div>
+          <div class="form-row">
+            <label><span>称呼</span><input id="registerName" type="text" autocomplete="name" maxlength="20" placeholder="怎么称呼你" required></label>
+            <label><span>手机号</span><input id="registerPhone" type="tel" inputmode="numeric" autocomplete="tel" maxlength="11" placeholder="11 位手机号" required></label>
+          </div>
+          <div class="form-row">
+            <label><span>设置密码</span><input id="registerPassword" type="password" autocomplete="new-password" minlength="6" placeholder="至少 6 位" required></label>
+            <label><span>确认密码</span><input id="registerConfirm" type="password" autocomplete="new-password" minlength="6" placeholder="再次输入" required></label>
+          </div>
+          <p class="form-hint">此版本为本地静态演示，账户信息仅保存在当前浏览器。</p>
+          <p class="form-error" id="registerError" role="alert"></p>
+          <button class="button button-primary account-submit" type="submit">注册并登录</button>
+        </form>
+      </div>
+
+      <div class="profile-view" id="profileView" hidden>
+        <div class="profile-heading">
+          <div class="profile-avatar" id="profileAvatar">禾</div>
+          <div><p class="eyebrow ink">MY ACCOUNT</p><h2 id="profileName"></h2><p id="profilePhone"></p></div>
+        </div>
+        <div class="saved-address" id="savedAddress"></div>
+        <div class="profile-actions">
+          <a class="button button-primary" href="index.html">继续选购</a>
+          <button class="button profile-logout" id="logoutButton" type="button">退出登录</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="account.js"></script>
+</body>
+</html>

@@ -105,8 +105,14 @@ const products = [
   }
 ];
 
+const STORAGE_KEYS = {
+  users: "heye_users_v1",
+  session: "heye_session_v1",
+  cart: "heye_cart_v1"
+};
+
 const categoryLabels = ["全部", "鸡肉", "冻干", "洁齿", "训练奖励"];
-const state = { category: "全部", cart: new Map(), selectedId: null };
+const state = { category: "全部", cart: loadCart(), selectedId: null };
 
 const productGrid = document.querySelector("#productGrid");
 const bestsellerGrid = document.querySelector("#bestsellerGrid");
@@ -116,9 +122,42 @@ const cartTotal = document.querySelector("#cartTotal");
 const cartCount = document.querySelector("#cartCount");
 const checkout = document.querySelector("#checkout");
 const toast = document.querySelector("#toast");
+const accountLabel = document.querySelector("#accountLabel");
+const addressForm = document.querySelector("#addressForm");
 
 const formatPrice = value => `¥${value.toFixed(0)}`;
 const getProduct = id => products.find(product => product.id === id);
+function getUsers() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEYS.users)) || []; }
+  catch { return []; }
+}
+
+function loadCart() {
+  try { return new Map(JSON.parse(localStorage.getItem(STORAGE_KEYS.cart)) || []); }
+  catch { return new Map(); }
+}
+
+function persistCart() {
+  localStorage.setItem(STORAGE_KEYS.cart, JSON.stringify([...state.cart.entries()]));
+}
+
+function currentUser() {
+  const id = localStorage.getItem(STORAGE_KEYS.session);
+  return getUsers().find(user => user.id === id) || null;
+}
+
+function saveUserAddress(userId, address) {
+  const users = getUsers();
+  const index = users.findIndex(user => user.id === userId);
+  if (index < 0) return;
+  users[index].address = address;
+  localStorage.setItem(STORAGE_KEYS.users, JSON.stringify(users));
+}
+
+function renderAccount() {
+  const user = currentUser();
+  accountLabel.textContent = user ? user.name : "登录 / 注册";
+}
 
 function renderFilters() {
   filters.innerHTML = categoryLabels.map(category => `
@@ -230,6 +269,7 @@ function renderCart() {
   cartCount.textContent = totalQuantity;
   cartTotal.textContent = formatPrice(totalPrice);
   checkout.disabled = entries.length === 0;
+  persistCart();
 
   if (!entries.length) {
     cartItems.innerHTML = `<div class="empty-cart"><strong>购物袋还是空的</strong><p>挑一份它会喜欢的奖励吧。</p></div>`;
@@ -327,11 +367,53 @@ document.addEventListener("keydown", event => {
   if (openOverlayElement) closeOverlay(openOverlayElement.id);
 });
 
-checkout.addEventListener("click", () => {
+function beginCheckout() {
   if (!state.cart.size) return;
+  const user = currentUser();
+  if (!user) {
+    persistCart();
+    location.href = "account.html?redirect=checkout";
+    return;
+  }
+
+  const address = user.address || { recipient: user.name, phone: user.phone, region: "", detail: "" };
+  document.querySelector("#addressRecipient").value = address.recipient;
+  document.querySelector("#addressPhone").value = address.phone;
+  document.querySelector("#addressRegion").value = address.region;
+  document.querySelector("#addressDetail").value = address.detail;
+  document.querySelector("#addressTotal").textContent = cartTotal.textContent;
+  document.querySelector("#addressError").textContent = "";
+  closeOverlay("cartOverlay");
+  openOverlay("addressOverlay");
+}
+
+checkout.addEventListener("click", beginCheckout);
+
+addressForm.addEventListener("submit", event => {
+  event.preventDefault();
+  const user = currentUser();
+  if (!user) {
+    location.href = "account.html?redirect=checkout";
+    return;
+  }
+
+  const address = {
+    recipient: document.querySelector("#addressRecipient").value.trim(),
+    phone: document.querySelector("#addressPhone").value.trim(),
+    region: document.querySelector("#addressRegion").value.trim(),
+    detail: document.querySelector("#addressDetail").value.trim()
+  };
+  const error = document.querySelector("#addressError");
+  if (!/^1\d{10}$/.test(address.phone)) {
+    error.textContent = "请输入有效的 11 位联系电话。";
+    return;
+  }
+
+  saveUserAddress(user.id, address);
+  document.querySelector("#successAddress").textContent = `配送至：${address.recipient} · ${address.phone} · ${address.region} ${address.detail}`;
   state.cart.clear();
   renderCart();
-  closeOverlay("cartOverlay");
+  closeOverlay("addressOverlay");
   openOverlay("successOverlay");
 });
 
@@ -339,3 +421,8 @@ renderFilters();
 renderBestsellers();
 renderProducts();
 renderCart();
+renderAccount();
+
+if (new URLSearchParams(location.search).get("checkout") === "1" && state.cart.size) {
+  beginCheckout();
+}

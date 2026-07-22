@@ -1,0 +1,60 @@
+.account-page { min-height: 100vh; background: var(--cream); }
+.account-header { height: 72px; padding: 0 max(24px, calc((100vw - var(--container)) / 2)); display: flex; align-items: center; justify-content: space-between; background: var(--white); border-bottom: 1px solid var(--line); }
+.back-home { color: var(--ink-soft); font-size: 14px; }
+.back-home:hover { color: var(--ink); }
+.account-shell { min-height: calc(100vh - 72px); display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(480px, .88fr); }
+.account-intro { position: relative; min-height: 700px; overflow: hidden; }
+.account-intro img { position: absolute; inset: 0; height: 100%; object-fit: cover; object-position: 58% center; }
+.account-intro-shade { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(17,29,22,.82), rgba(17,29,22,.04) 72%); }
+.account-intro-copy { position: absolute; left: max(32px, calc((100vw - var(--container)) / 2)); right: 48px; bottom: 68px; color: var(--white); }
+.account-intro-copy h1 { font-size: clamp(46px, 5.4vw, 78px); margin-bottom: 18px; }
+.account-intro-copy > p:last-child { max-width: 500px; font-size: 17px; }
+.account-panel { display: grid; align-items: center; padding: 60px clamp(32px, 6vw, 88px); background: var(--white); }
+.account-tabs { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--line); margin-bottom: 38px; }
+.account-tab { min-height: 46px; border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--ink-soft); cursor: pointer; font-weight: 700; }
+.account-tab.active { color: var(--ink); border-bottom-color: var(--ink); }
+.account-form { max-width: 560px; margin: 0 auto; }
+.form-heading { margin-bottom: 28px; }
+.form-heading h2, .profile-heading h2 { font-size: 42px; margin-bottom: 8px; }
+.form-heading > p:last-child, .profile-heading > div > p:last-child { color: var(--ink-soft); }
+.account-form label { display: grid; gap: 7px; margin-bottom: 18px; color: var(--ink-soft); font-size: 13px; }
+.account-form input { width: 100%; height: 50px; border: 1px solid var(--line); border-radius: 4px; padding: 0 14px; color: var(--ink); background: var(--white); font: inherit; outline: none; }
+.account-form input:focus { border-color: var(--sage); box-shadow: 0 0 0 3px rgba(112,128,107,.12); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-hint { color: var(--ink-soft); font-size: 11px; }
+.form-error { min-height: 22px; color: #a83f4d; font-size: 12px; }
+.account-submit { width: 100%; }
+.profile-view { width: 100%; max-width: 560px; margin: 0 auto; }
+.profile-heading { display: grid; grid-template-columns: 68px 1fr; gap: 18px; align-items: center; margin-bottom: 34px; }
+.profile-avatar { width: 68px; height: 68px; display: grid; place-items: center; color: var(--white); background: var(--ink); font-family: "STSong", "SimSun", serif; font-size: 32px; }
+.profile-heading h2 { margin: 0; }
+.profile-heading p { margin: 0; }
+.saved-address { padding: 22px; background: var(--cream); border-left: 3px solid var(--sage); }
+.saved-address small { display: block; color: var(--berry); font-weight: 700; margin-bottom: 8px; }
+.saved-address strong { display: block; margin-bottom: 5px; }
+.saved-address p { margin: 0; color: var(--ink-soft); }
+.profile-actions { display: grid; grid-template-columns: 1fr auto; gap: 12px; margin-top: 28px; }
+.profile-logout { color: var(--ink-soft); background: transparent; border-color: var(--line); }
+
+@media (max-width: 900px) {
+  .account-shell { grid-template-columns: 1fr; }
+  .account-intro { min-height: 380px; }
+  .account-intro-copy { left: 28px; bottom: 36px; }
+  .account-intro-copy h1 { font-size: 48px; }
+  .account-panel { padding: 50px 24px 70px; }
+}
+
+@media (max-width: 600px) {
+  .account-header { height: 62px; padding: 0 16px; }
+  .account-shell { min-height: calc(100svh - 62px); }
+  .account-intro { min-height: 300px; }
+  .account-intro img { object-position: 62% center; }
+  .account-intro-copy { left: 20px; right: 20px; bottom: 22px; }
+  .account-intro-copy h1 { font-size: 38px; margin-bottom: 8px; }
+  .account-intro-copy > p:last-child { margin: 0; font-size: 14px; }
+  .account-panel { padding: 38px 18px 54px; }
+  .account-tabs { margin-bottom: 28px; }
+  .form-row { grid-template-columns: 1fr; gap: 0; }
+  .form-heading h2, .profile-heading h2 { font-size: 34px; }
+  .profile-actions { grid-template-columns: 1fr; }
+}
