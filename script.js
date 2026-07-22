@@ -1,4 +1,4 @@
-const products = [
+const fallbackProducts = [
   {
     id: "chicken-jerky",
     petTypes: ["cat", "dog"],
@@ -168,6 +168,8 @@ const products = [
     badge: "轻负担烘焙"
   }
 ];
+
+let products = [...fallbackProducts];
 
 const reviewMeta = {
   "chicken-jerky": { rating: 4.9, count: 386, quote: "鸡肉纤维很干爽，拆袋香但不油手，家里两只都很爱吃。" },
@@ -694,13 +696,61 @@ addressForm.addEventListener("submit", event => {
   openOverlay("successOverlay");
 });
 
-renderFilters();
-renderBestsellers();
-renderProducts();
-renderCart();
-renderAccount();
-renderRecommendations();
-
-if (new URLSearchParams(location.search).get("checkout") === "1" && state.cart.size) {
-  beginCheckout();
+function mapRemoteProduct(row) {
+  return {
+    id: row.slug,
+    petTypes: row.pet_types,
+    name: row.name,
+    category: row.category,
+    price: Number(row.price),
+    monthlySales: row.monthly_sales,
+    spec: row.spec,
+    selling: row.selling,
+    ingredients: row.ingredients,
+    pet: row.pet_label,
+    image: row.image_url,
+    badge: row.badge
+  };
 }
+
+async function loadRemoteProducts() {
+  const supabaseClient = window.getHeyeSupabaseClient?.();
+  if (!supabaseClient) return;
+
+  const { data, error } = await supabaseClient
+    .from("products")
+    .select("*")
+    .eq("is_active", true)
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: true });
+
+  if (error || !data?.length) {
+    console.warn("Supabase 商品读取失败，已使用本地商品数据。", error);
+    return;
+  }
+
+  products = data.map(mapRemoteProduct);
+  data.forEach(row => {
+    reviewMeta[row.slug] = {
+      rating: Number(row.rating || 5),
+      count: row.review_count || 0,
+      quote: row.review_quote || "食材清楚，毛孩子吃得很开心。"
+    };
+  });
+}
+
+async function initializeStorefront() {
+  await loadRemoteProducts();
+  renderFilters();
+  renderBestsellers();
+  renderProducts();
+  renderCart();
+  renderAccount();
+  renderRecommendations();
+
+  if (new URLSearchParams(location.search).get("checkout") === "1" && state.cart.size) {
+    beginCheckout();
+  }
+}
+
+initializeStorefront();

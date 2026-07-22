@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>商品管理｜禾野宠食</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-page">
+  <header class="admin-header">
+    <a class="brand" href="index.html"><span class="brand-mark">禾</span><span>禾野管理台</span></a>
+    <div class="admin-header-actions"><span id="adminIdentity">未登录</span><a href="index.html">查看店铺</a></div>
+  </header>
+
+  <main class="admin-main">
+    <section class="setup-panel" id="setupPanel" hidden>
+      <p class="eyebrow ink">SETUP REQUIRED</p>
+      <h1>还差 Supabase 配置</h1>
+      <p>将项目 URL 与公开的 publishable key 写入 <code>supabase-config.js</code> 后，即可登录管理后台。</p>
+    </section>
+
+    <section class="admin-login" id="loginView">
+      <form id="adminLoginForm">
+        <p class="eyebrow ink">ADMIN ACCESS</p>
+        <h1>管理员登录</h1>
+        <p>仅管理员白名单中的 Supabase 账户可以修改商品。</p>
+        <label><span>管理员邮箱</span><input id="adminEmail" type="email" autocomplete="username" required></label>
+        <label><span>密码</span><input id="adminPassword" type="password" autocomplete="current-password" required></label>
+        <p class="admin-error" id="loginError" role="alert"></p>
+        <button class="button button-primary" type="submit">登录管理台</button>
+      </form>
+    </section>
+
+    <section class="admin-dashboard" id="dashboardView" hidden>
+      <div class="admin-toolbar">
+        <div><p class="eyebrow ink">PRODUCT CATALOG</p><h1>商品管理</h1><p id="productSummary">正在读取商品...</p></div>
+        <div><button class="button admin-secondary" id="newProductButton" type="button">新增商品</button><button class="button admin-secondary" id="adminLogout" type="button">退出</button></div>
+      </div>
+
+      <div class="admin-workspace">
+        <section class="admin-list-panel" aria-labelledby="productListTitle">
+          <div class="admin-list-heading"><h2 id="productListTitle">全部商品</h2><input id="productSearch" type="search" placeholder="搜索商品或分类"></div>
+          <div class="admin-product-list" id="adminProductList"></div>
+        </section>
+
+        <aside class="admin-editor" id="productEditor">
+          <div class="editor-heading"><div><p class="eyebrow ink">PRODUCT EDITOR</p><h2 id="editorTitle">新增商品</h2></div><button class="icon-button" id="closeEditor" type="button" aria-label="关闭编辑器">×</button></div>
+          <form id="productForm">
+            <input id="productId" type="hidden">
+            <input id="existingImageUrl" type="hidden">
+            <div class="admin-form-row">
+              <label><span>商品名称</span><input id="productName" type="text" maxlength="60" required></label>
+              <label><span>商品 ID</span><input id="productSlug" type="text" maxlength="60" pattern="[a-z0-9-]+" placeholder="例如 rabbit-freeze" required></label>
+            </div>
+            <div class="admin-form-row three-columns">
+              <label><span>食品分类</span><input id="productCategory" type="text" maxlength="20" required></label>
+              <label><span>价格（元）</span><input id="productPrice" type="number" min="0" step="0.01" required></label>
+              <label><span>规格</span><input id="productSpec" type="text" maxlength="30" required></label>
+            </div>
+            <fieldset><legend>适用宠物</legend><label class="check-label"><input id="productCat" type="checkbox">猫猫</label><label class="check-label"><input id="productDog" type="checkbox">狗狗</label></fieldset>
+            <label><span>商品卖点</span><textarea id="productSelling" maxlength="240" required></textarea></label>
+            <label><span>主要成分</span><textarea id="productIngredients" maxlength="180" required></textarea></label>
+            <div class="admin-form-row">
+              <label><span>适用文案</span><input id="productPetLabel" type="text" maxlength="40" placeholder="例如 犬猫通用" required></label>
+              <label><span>角标</span><input id="productBadge" type="text" maxlength="20" value="新品" required></label>
+            </div>
+            <div class="admin-form-row three-columns">
+              <label><span>月销量</span><input id="productSales" type="number" min="0" value="0" required></label>
+              <label><span>评分</span><input id="productRating" type="number" min="1" max="5" step="0.1" value="5" required></label>
+              <label><span>评价数</span><input id="productReviewCount" type="number" min="0" value="0" required></label>
+            </div>
+            <label><span>精选评价</span><input id="productReviewQuote" type="text" maxlength="160" placeholder="一条代表性买家反馈"></label>
+            <label><span>商品图片</span><input id="productImage" type="file" accept="image/png,image/jpeg,image/webp"><small>新增商品必须上传，编辑时不上传则保留原图。</small></label>
+            <div class="admin-image-preview" id="imagePreview">等待选择图片</div>
+            <div class="admin-form-row">
+              <label><span>排序值</span><input id="productSortOrder" type="number" min="0" value="0"></label>
+              <label class="status-toggle"><span>商品状态</span><select id="productActive"><option value="true">上架</option><option value="false">下架</option></select></label>
+            </div>
+            <p class="admin-error" id="productError" role="alert"></p>
+            <div class="editor-actions"><button class="button button-primary" id="saveProduct" type="submit">保存商品</button><button class="button delete-product" id="deleteProduct" type="button" hidden>删除商品</button></div>
+          </form>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="supabase-client.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
