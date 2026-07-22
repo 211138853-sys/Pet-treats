@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="禾野宠食，高品质天然宠物零食。">
+  <title>禾野宠食｜认真做一口好零食</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header" id="top">
+    <a class="brand" href="#top" aria-label="禾野宠食首页">
+      <span class="brand-mark">禾</span>
+      <span>禾野宠食</span>
+    </a>
+    <nav class="nav-links" aria-label="主要导航">
+      <a href="#products">全部零食</a>
+      <a href="#promise">选材标准</a>
+    </nav>
+    <button class="cart-button" id="openCart" type="button" aria-label="打开购物车">
+      <span aria-hidden="true">购物袋</span>
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <img class="hero-image" src="assets/images/hero.png" alt="金毛犬、猫与天然宠物零食陈列">
+      <div class="hero-shade"></div>
+      <div class="hero-content">
+        <p class="eyebrow">NATURAL TREATS · DAILY JOY</p>
+        <h1 id="hero-title">禾野宠食</h1>
+        <p class="hero-copy">好原料，少一点加工。把每一次奖励，都变成它摇尾巴的理由。</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#products">挑选今日奖励</a>
+          <button class="button button-light" id="heroCart" type="button">查看购物车</button>
+        </div>
+        <ul class="hero-notes" aria-label="品牌核心卖点">
+          <li>人食级原料</li>
+          <li>0 香精色素</li>
+          <li>小批次鲜制</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="trust-strip" id="promise" aria-label="选材标准">
+      <article><strong>真肉优先</strong><span>配方首位看得见</span></article>
+      <article><strong>轻度加工</strong><span>保留食材本味与营养</span></article>
+      <article><strong>成分透明</strong><span>每一口都清清楚楚</span></article>
+      <article><strong>犬猫友好</strong><span>按体型与场景挑选</span></article>
+    </section>
+
+    <section class="bestsellers-section" aria-labelledby="bestsellers-title">
+      <div class="section-heading compact-heading">
+        <div>
+          <p class="eyebrow ink">BESTSELLERS</p>
+          <h2 id="bestsellers-title">本月热销榜</h2>
+        </div>
+        <p>按本月销量排序，看看大家都在囤什么。</p>
+      </div>
+      <div class="bestseller-grid" id="bestsellerGrid"></div>
+    </section>
+    <section class="products-section" id="products" aria-labelledby="products-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow ink">SHOP THE GOOD STUFF</p>
+          <h2 id="products-title">给它一口自然好味</h2>
+        </div>
+        <p>从每日加餐到训练奖励，按它真正需要的来挑。</p>
+      </div>
+      <div class="filters" id="filters" role="group" aria-label="商品分类筛选"></div>
+      <div class="product-grid" id="productGrid" aria-live="polite"></div>
+    </section>
+
+    <section class="story-band">
+      <div>
+        <p class="eyebrow">OUR SMALL PROMISE</p>
+        <h2>配料表短一点，陪伴久一点。</h2>
+      </div>
+      <p>我们用能叫出名字的食材，做能放心递到它嘴边的零食。没有花哨概念，只有认真烘焙与冻干。</p>
+    </section>
+  </main>
+
+  <footer>
+    <a class="brand footer-brand" href="#top"><span class="brand-mark">禾</span><span>禾野宠食</span></a>
+    <p>天然原料 · 简单配方 · 用心奖励</p>
+    <p>© 2026 Heye Pet Treats</p>
+  </footer>
+
+  <div class="overlay" id="productOverlay" hidden>
+    <section class="modal product-modal" role="dialog" aria-modal="true" aria-labelledby="detailName">
+      <button class="icon-button modal-close" type="button" data-close="productOverlay" aria-label="关闭商品详情">×</button>
+      <div class="detail-media"><img id="detailImage" src="" alt=""></div>
+      <div class="detail-content">
+        <p class="product-category" id="detailCategory"></p>
+        <h2 id="detailName"></h2>
+        <p class="detail-selling" id="detailSelling"></p>
+        <div class="detail-meta">
+          <span><small>规格</small><strong id="detailSpec"></strong></span>
+          <span><small>适用</small><strong id="detailPet"></strong></span>
+          <span><small>近期热度</small><strong id="detailSales"></strong></span>
+        </div>
+        <div class="ingredients"><small>主要成分</small><p id="detailIngredients"></p></div>
+        <div class="detail-footer">
+          <strong class="detail-price" id="detailPrice"></strong>
+          <button class="button button-primary" id="detailAdd" type="button">加入购物车</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="overlay cart-overlay" id="cartOverlay" hidden>
+    <aside class="cart-panel" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+      <div class="cart-header">
+        <div><p class="eyebrow ink">YOUR BAG</p><h2 id="cartTitle">购物车</h2></div>
+        <button class="icon-button" type="button" data-close="cartOverlay" aria-label="关闭购物车">×</button>
+      </div>
+      <div class="cart-items" id="cartItems"></div>
+      <div class="cart-footer">
+        <div class="cart-total"><span>商品合计</span><strong id="cartTotal">¥0</strong></div>
+        <p>全场满 ¥99 包邮，模拟订单不产生实际付款。</p>
+        <button class="button button-primary checkout-button" id="checkout" type="button">提交订单</button>
+      </div>
+    </aside>
+  </div>
+
+  <div class="overlay" id="successOverlay" hidden>
+    <section class="modal success-modal" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+      <div class="success-mark" aria-hidden="true">✓</div>
+      <p class="eyebrow ink">ORDER CONFIRMED</p>
+      <h2 id="successTitle">下单成功</h2>
+      <p>这份心意已经打包出发。愿它吃得开心，也陪你更久一点。</p>
+      <button class="button button-primary" type="button" data-close="successOverlay">继续逛逛</button>
+    </section>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
