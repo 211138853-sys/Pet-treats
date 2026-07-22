@@ -696,49 +696,28 @@ addressForm.addEventListener("submit", event => {
   openOverlay("successOverlay");
 });
 
-function mapRemoteProduct(row) {
-  return {
-    id: row.slug,
-    petTypes: row.pet_types,
-    name: row.name,
-    category: row.category,
-    price: Number(row.price),
-    monthlySales: row.monthly_sales,
-    spec: row.spec,
-    selling: row.selling,
-    ingredients: row.ingredients,
-    pet: row.pet_label,
-    image: row.image_url,
-    badge: row.badge
-  };
-}
-
 async function loadRemoteProducts() {
-  const supabaseClient = window.getHeyeSupabaseClient?.();
-  if (!supabaseClient) return;
+  try {
+    const response = await fetch("products.json?v=" + Date.now(), { cache: "no-store" });
+    if (!response.ok) throw new Error("商品数据读取失败（" + response.status + "）");
+    const publishedProducts = await response.json();
+    if (!Array.isArray(publishedProducts) || !publishedProducts.length) return;
 
-  const { data, error } = await supabaseClient
-    .from("products")
-    .select("*")
-    .eq("is_active", true)
-    .order("sort_order", { ascending: true })
-    .order("created_at", { ascending: true });
+    products = publishedProducts
+      .filter(product => product.isActive !== false)
+      .sort((first, second) => (first.sortOrder || 0) - (second.sortOrder || 0));
 
-  if (error || !data?.length) {
-    console.warn("Supabase 商品读取失败，已使用本地商品数据。", error);
-    return;
+    publishedProducts.forEach(product => {
+      reviewMeta[product.id] = {
+        rating: Number(product.rating || 5),
+        count: Number(product.reviewCount || 0),
+        quote: product.reviewQuote || "食材清楚，毛孩子吃得很开心。"
+      };
+    });
+  } catch (error) {
+    console.warn("GitHub 商品数据读取失败，已使用本地备用商品。", error);
   }
-
-  products = data.map(mapRemoteProduct);
-  data.forEach(row => {
-    reviewMeta[row.slug] = {
-      rating: Number(row.rating || 5),
-      count: row.review_count || 0,
-      quote: row.review_quote || "食材清楚，毛孩子吃得很开心。"
-    };
-  });
 }
-
 async function initializeStorefront() {
   await loadRemoteProducts();
   renderFilters();

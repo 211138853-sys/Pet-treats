@@ -15,21 +15,16 @@
   </header>
 
   <main class="admin-main">
-    <section class="setup-panel" id="setupPanel" hidden>
-      <p class="eyebrow ink">SETUP REQUIRED</p>
-      <h1>还差 Supabase 配置</h1>
-      <p>将项目 URL 与公开的 publishable key 写入 <code>supabase-config.js</code> 后，即可登录管理后台。</p>
-    </section>
-
-    <section class="admin-login" id="loginView">
+<section class="admin-login" id="loginView">
       <form id="adminLoginForm">
-        <p class="eyebrow ink">ADMIN ACCESS</p>
-        <h1>管理员登录</h1>
-        <p>仅管理员白名单中的 Supabase 账户可以修改商品。</p>
-        <label><span>管理员邮箱</span><input id="adminEmail" type="email" autocomplete="username" required></label>
-        <label><span>密码</span><input id="adminPassword" type="password" autocomplete="current-password" required></label>
+        <p class="eyebrow ink">GITHUB ACCESS</p>
+        <h1>连接 GitHub 商品库</h1>
+        <p>使用仅授权 <strong>Pet-treats</strong> 仓库内容读写的 Fine-grained Token 管理商品。</p>
+        <label><span>GitHub Token</span><input id="githubToken" type="password" autocomplete="off" placeholder="github_pat_..." required></label>
+        <small>Token 只保存在当前页面内存中，刷新或关闭页面后自动清除。</small>
+        <p class="token-guide"><a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">创建 Fine-grained Token</a>，Repository access 选择 Pet-treats，Contents 权限选择 Read and write。</p>
         <p class="admin-error" id="loginError" role="alert"></p>
-        <button class="button button-primary" type="submit">登录管理台</button>
+        <button class="button button-primary" type="submit">连接 GitHub</button>
       </form>
     </section>
 
@@ -87,9 +82,7 @@
   </main>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase-config.js?v=2"></script>
-  <script src="supabase-client.js?v=2"></script>
-  <script src="admin.js?v=3"></script>
+  <script src="github-config.js?v=1"></script>
+  <script src="github-admin.js?v=1"></script>
 </body>
 </html>
