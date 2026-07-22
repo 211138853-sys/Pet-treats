@@ -162,7 +162,7 @@ document.querySelector("#adminLoginForm").addEventListener("submit", async event
     password: document.querySelector("#adminPassword").value
   });
   if (error) {
-    errorNode.textContent = "邮箱或密码不正确。";
+    errorNode.textContent = "登录失败：" + error.message;
     return;
   }
   await showDashboard(data.user);
