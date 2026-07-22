@@ -79,6 +79,8 @@ img { display: block; width: 100%; }
 .header-actions { justify-self: end; display: flex; align-items: center; gap: 24px; }
 .account-link { display: inline-flex; align-items: center; gap: 8px; color: var(--ink-soft); font-size: 13px; font-weight: 700; }
 .account-link:hover { color: var(--ink); }
+.admin-entry { color: var(--sage-deep); font-size: 12px; font-weight: 800; letter-spacing: .08em; }
+.admin-entry:hover { color: var(--ink); }
 .account-dot { width: 8px; height: 8px; border: 1px solid var(--sage); border-radius: 50%; background: var(--sage-light); }
 .hero {
   min-height: min(760px, calc(100vh - 72px));

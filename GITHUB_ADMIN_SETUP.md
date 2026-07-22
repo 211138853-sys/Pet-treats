@@ -19,4 +19,4 @@
 4. 保存会修改 `products.json`，上传的图片会保存到 `assets/images/uploads/`。
 5. GitHub Pages 通常在约一分钟后更新网站。
 
-Token 只保存在当前页面的内存中，不会写入网站文件、localStorage 或 GitHub 仓库。刷新或关闭后台页面后需要重新粘贴。
+Token 只保存在当前标签页的 sessionStorage 中，不会写入网站文件、localStorage 或 GitHub 仓库。退出后台或关闭标签页后自动清除。

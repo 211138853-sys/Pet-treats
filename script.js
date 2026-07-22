@@ -213,6 +213,7 @@ const addressForm = document.querySelector("#addressForm");
 const recommendationGrid = document.querySelector("#recommendationGrid");
 const recommendationReason = document.querySelector("#recommendationReason");
 const reviewForm = document.querySelector("#reviewForm");
+const adminEntry = document.querySelector("#adminEntry");
 
 const formatPrice = value => `¥${value.toFixed(0)}`;
 const getProduct = id => products.find(product => product.id === id);
@@ -277,6 +278,9 @@ function saveUserAddress(userId, address) {
 function renderAccount() {
   const user = currentUser();
   accountLabel.textContent = user ? user.name : "登录 / 注册";
+}
+function renderAdminEntry() {
+  adminEntry.hidden = !sessionStorage.getItem("heye_github_admin_token_v1");
 }
 
 function matchesPet(product) {
@@ -725,6 +729,7 @@ async function initializeStorefront() {
   renderProducts();
   renderCart();
   renderAccount();
+  renderAdminEntry();
   renderRecommendations();
 
   if (new URLSearchParams(location.search).get("checkout") === "1" && state.cart.size) {
@@ -732,4 +737,5 @@ async function initializeStorefront() {
   }
 }
 
+window.addEventListener("pageshow", renderAdminEntry);
 initializeStorefront();

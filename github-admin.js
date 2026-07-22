@@ -1,10 +1,11 @@
 const config = window.HEYE_GITHUB_CONFIG;
+const ADMIN_TOKEN_KEY = "heye_github_admin_token_v1";
 const loginView = document.querySelector("#loginView");
 const dashboardView = document.querySelector("#dashboardView");
 const productList = document.querySelector("#adminProductList");
 const productForm = document.querySelector("#productForm");
 const toast = document.querySelector("#toast");
-let githubToken = "";
+let githubToken = sessionStorage.getItem(ADMIN_TOKEN_KEY) || "";
 let productsSha = "";
 let adminProducts = [];
 
@@ -190,24 +191,29 @@ function formPayload(image) {
   };
 }
 
+async function openDashboard() {
+  const repository = await githubRequest("/repos/" + config.owner + "/" + config.repo);
+  document.querySelector("#adminIdentity").textContent = repository.full_name;
+  await loadProducts();
+  loginView.hidden = true;
+  dashboardView.hidden = false;
+  resetEditor();
+}
+
 document.querySelector("#adminLoginForm").addEventListener("submit", async event => {
   event.preventDefault();
   const errorNode = document.querySelector("#loginError");
   errorNode.textContent = "";
   githubToken = document.querySelector("#githubToken").value.trim();
   try {
-    const repository = await githubRequest(`/repos/${config.owner}/${config.repo}`);
-    document.querySelector("#adminIdentity").textContent = repository.full_name;
-    await loadProducts();
-    loginView.hidden = true;
-    dashboardView.hidden = false;
-    resetEditor();
+    await openDashboard();
+    sessionStorage.setItem(ADMIN_TOKEN_KEY, githubToken);
   } catch (error) {
     githubToken = "";
-    errorNode.textContent = `连接失败：${error.message}`;
+    sessionStorage.removeItem(ADMIN_TOKEN_KEY);
+    errorNode.textContent = "连接失败：" + error.message;
   }
 });
-
 productForm.addEventListener("submit", async event => {
   event.preventDefault();
   const errorNode = document.querySelector("#productError");
@@ -280,7 +286,19 @@ document.querySelector("#newProductButton").addEventListener("click", resetEdito
 document.querySelector("#closeEditor").addEventListener("click", resetEditor);
 document.querySelector("#adminLogout").addEventListener("click", () => {
   githubToken = "";
+  sessionStorage.removeItem(ADMIN_TOKEN_KEY);
   location.reload();
 });
 
-resetEditor();
+async function initializeAdmin() {
+  resetEditor();
+  if (!githubToken) return;
+  try {
+    await openDashboard();
+  } catch {
+    githubToken = "";
+    sessionStorage.removeItem(ADMIN_TOKEN_KEY);
+  }
+}
+
+initializeAdmin();
