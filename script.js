@@ -197,7 +197,7 @@ const petTypeLabels = [
   { value: "cat", label: "猫猫" },
   { value: "dog", label: "狗狗" }
 ];
-const state = { petType: "all", category: "全部食品", cart: loadCart(), selectedId: null };
+const state = { petType: "all", category: "全部食品", query: "", sort: "default", cart: loadCart(), selectedId: null };
 
 const productGrid = document.querySelector("#productGrid");
 const bestsellerGrid = document.querySelector("#bestsellerGrid");
@@ -207,6 +207,15 @@ const cartItems = document.querySelector("#cartItems");
 const cartTotal = document.querySelector("#cartTotal");
 const cartCount = document.querySelector("#cartCount");
 const checkout = document.querySelector("#checkout");
+const productSearch = document.querySelector("#productSearch");
+const clearProductSearch = document.querySelector("#clearProductSearch");
+const productSort = document.querySelector("#productSort");
+const productResultCount = document.querySelector("#productResultCount");
+const shippingMessage = document.querySelector("#shippingMessage");
+const shippingProgress = document.querySelector("#shippingProgress");
+const mobileCartBar = document.querySelector("#mobileCartBar");
+const mobileCartMeta = document.querySelector("#mobileCartMeta");
+const mobileCartTotal = document.querySelector("#mobileCartTotal");
 const toast = document.querySelector("#toast");
 const accountLabel = document.querySelector("#accountLabel");
 const addressForm = document.querySelector("#addressForm");
@@ -301,12 +310,28 @@ function renderFilters() {
 }
 
 function renderProducts() {
-  const visibleProducts = products.filter(product =>
+  const normalizedQuery = state.query.trim().toLowerCase();
+  let visibleProducts = products.filter(product =>
     matchesPet(product) &&
-    (state.category === "全部食品" || product.category === state.category)
+    (state.category === "全部食品" || product.category === state.category) &&
+    (!normalizedQuery || (product.name + product.category + product.selling + product.ingredients).toLowerCase().includes(normalizedQuery))
   );
 
-  productGrid.innerHTML = visibleProducts.map(product => `
+  const sorters = {
+    sales: (first, second) => second.monthlySales - first.monthlySales,
+    rating: (first, second) => getReviewStats(second.id).rating - getReviewStats(first.id).rating,
+    "price-asc": (first, second) => first.price - second.price,
+    "price-desc": (first, second) => second.price - first.price
+  };
+  if (sorters[state.sort]) visibleProducts = [...visibleProducts].sort(sorters[state.sort]);
+
+  productResultCount.textContent = "找到 " + visibleProducts.length + " 款";
+  clearProductSearch.hidden = !state.query;
+  if (!visibleProducts.length) {
+    productGrid.innerHTML = '<div class="product-empty"><strong>没有找到合适的零食</strong><p>换个关键词，或清除筛选后再看看。</p><button type="button" id="resetProductFilters">清除筛选</button></div>';
+    return;
+  }
+productGrid.innerHTML = visibleProducts.map(product => `
     <article class="product-card" data-id="${product.id}">
       <div class="product-image-wrap" data-detail="${product.id}" role="button" tabindex="0" aria-label="查看${product.name}详情">
         <img src="${product.image}" alt="${product.name}" loading="lazy">
@@ -497,11 +522,18 @@ function updateQuantity(id, change) {
 }
 
 function renderCart() {
-  const entries = [...state.cart.entries()];
+  const entries = [...state.cart.entries()].filter(([id]) => getProduct(id));
+  if (entries.length !== state.cart.size) state.cart = new Map(entries);
   const totalQuantity = entries.reduce((sum, [, quantity]) => sum + quantity, 0);
   const totalPrice = entries.reduce((sum, [id, quantity]) => sum + getProduct(id).price * quantity, 0);
   cartCount.textContent = totalQuantity;
   cartTotal.textContent = formatPrice(totalPrice);
+  const remainingForShipping = Math.max(0, 99 - totalPrice);
+  shippingMessage.textContent = totalPrice >= 99 ? "已享全场包邮" : (totalPrice ? "再选 " + formatPrice(remainingForShipping) + " 即享包邮" : "满 ¥99 包邮");
+  shippingProgress.style.width = Math.min(100, totalPrice / 99 * 100) + "%";
+  mobileCartBar.hidden = entries.length === 0;
+  mobileCartMeta.textContent = "购物袋 · " + totalQuantity + " 件";
+  mobileCartTotal.textContent = formatPrice(totalPrice);
   checkout.disabled = entries.length === 0;
   persistCart();
 
@@ -544,6 +576,32 @@ foodFilters.addEventListener("click", event => {
   const button = event.target.closest("[data-category]");
   if (!button) return;
   state.category = button.dataset.category;
+  renderFilters();
+  renderProducts();
+});
+productSearch.addEventListener("input", event => {
+  state.query = event.target.value;
+  renderProducts();
+});
+
+clearProductSearch.addEventListener("click", () => {
+  state.query = "";
+  productSearch.value = "";
+  productSearch.focus();
+  renderProducts();
+});
+
+productSort.addEventListener("change", event => {
+  state.sort = event.target.value;
+  renderProducts();
+});
+
+productGrid.addEventListener("click", event => {
+  if (!event.target.closest("#resetProductFilters")) return;
+  state.petType = "all";
+  state.category = "全部食品";
+  state.query = "";
+  productSearch.value = "";
   renderFilters();
   renderProducts();
 });
@@ -633,6 +691,8 @@ document.querySelector("#detailAdd").addEventListener("click", () => {
 ["#openCart", "#heroCart"].forEach(selector => {
   document.querySelector(selector).addEventListener("click", () => openOverlay("cartOverlay"));
 });
+
+mobileCartBar.addEventListener("click", () => openOverlay("cartOverlay"));
 
 document.querySelectorAll("[data-close]").forEach(button => {
   button.addEventListener("click", () => closeOverlay(button.dataset.close));

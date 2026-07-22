@@ -92,6 +92,14 @@
           <div class="filters" id="foodFilters" role="group" aria-label="食品分类筛选"></div>
         </div>
       </div>
+      <div class="product-tools">
+        <div class="product-search-field">
+          <label for="productSearch">搜索商品</label>
+          <div><input id="productSearch" type="search" placeholder="搜索鸡肉、冻干、洁齿…" autocomplete="off"><button id="clearProductSearch" type="button" aria-label="清除搜索" hidden>×</button></div>
+        </div>
+        <label class="product-sort"><span>排序</span><select id="productSort"><option value="default">精选排序</option><option value="sales">月销量优先</option><option value="rating">评分优先</option><option value="price-asc">价格从低到高</option><option value="price-desc">价格从高到低</option></select></label>
+        <p class="product-result-count" id="productResultCount" aria-live="polite"></p>
+      </div>
       <div class="product-grid" id="productGrid" aria-live="polite"></div>
     </section>
 
@@ -157,7 +165,10 @@
       <div class="cart-items" id="cartItems"></div>
       <div class="cart-footer">
         <div class="cart-total"><span>商品合计</span><strong id="cartTotal">¥0</strong></div>
-        <p>全场满 ¥99 包邮，模拟订单不产生实际付款。</p>
+        <div class="shipping-progress">
+          <div><span id="shippingMessage">满 ¥99 包邮</span><small>模拟订单不产生实际付款</small></div>
+          <div class="shipping-progress-track" aria-hidden="true"><span id="shippingProgress"></span></div>
+        </div>
         <button class="button button-primary checkout-button" id="checkout" type="button">提交订单</button>
       </div>
     </aside>
@@ -197,7 +208,11 @@
     </section>
   </div>
 
+  <button class="mobile-cart-bar" id="mobileCartBar" type="button" hidden>
+    <span><small id="mobileCartMeta">购物袋</small><strong id="mobileCartTotal">¥0</strong></span>
+    <em>查看购物车</em>
+  </button>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="script.js?v=4"></script>
+  <script src="script.js?v=5"></script>
 </body>
 </html>
