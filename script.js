@@ -1,6 +1,7 @@
 const products = [
   {
     id: "chicken-jerky",
+    petTypes: ["cat", "dog"],
     name: "慢烘原切鸡胸",
     category: "鸡肉",
     price: 39,
@@ -14,6 +15,7 @@ const products = [
   },
   {
     id: "chicken-strips",
+    petTypes: ["cat", "dog"],
     name: "南瓜鸡肉软条",
     category: "鸡肉",
     price: 32,
@@ -27,6 +29,7 @@ const products = [
   },
   {
     id: "freeze-chicken",
+    petTypes: ["cat", "dog"],
     name: "原肉冻干鸡粒",
     category: "冻干",
     price: 49,
@@ -40,6 +43,7 @@ const products = [
   },
   {
     id: "freeze-liver",
+    petTypes: ["cat", "dog"],
     name: "冻干牛肝小方",
     category: "冻干",
     price: 45,
@@ -53,6 +57,7 @@ const products = [
   },
   {
     id: "dental-kelp",
+    petTypes: ["dog"],
     name: "海藻洁齿棒",
     category: "洁齿",
     price: 36,
@@ -66,6 +71,7 @@ const products = [
   },
   {
     id: "dental-milk",
+    petTypes: ["dog"],
     name: "山羊奶洁齿扭棒",
     category: "洁齿",
     price: 42,
@@ -79,6 +85,7 @@ const products = [
   },
   {
     id: "training-duo",
+    petTypes: ["dog"],
     name: "双拼训练小粒",
     category: "训练奖励",
     price: 29,
@@ -92,6 +99,7 @@ const products = [
   },
   {
     id: "training-heart",
+    petTypes: ["dog"],
     name: "红菜头牛肉心粒",
     category: "训练奖励",
     price: 34,
@@ -105,6 +113,7 @@ const products = [
   },
   {
     id: "duck-medallions",
+    petTypes: ["cat", "dog"],
     name: "原切鸭胸圆片",
     category: "鸭肉",
     price: 43,
@@ -118,6 +127,7 @@ const products = [
   },
   {
     id: "salmon-freeze",
+    petTypes: ["cat", "dog"],
     name: "冻干三文鱼粒",
     category: "海味",
     price: 56,
@@ -131,6 +141,7 @@ const products = [
   },
   {
     id: "goat-cheese",
+    petTypes: ["dog"],
     name: "山羊奶酪小方",
     category: "奶酪",
     price: 38,
@@ -144,6 +155,7 @@ const products = [
   },
   {
     id: "pumpkin-biscuit",
+    petTypes: ["dog"],
     name: "南瓜燕麦爪爪饼",
     category: "烘焙",
     price: 28,
@@ -163,12 +175,17 @@ const STORAGE_KEYS = {
   cart: "heye_cart_v1"
 };
 
-const categoryLabels = ["全部", "鸡肉", "冻干", "洁齿", "训练奖励", "鸭肉", "海味", "奶酪", "烘焙"];
-const state = { category: "全部", cart: loadCart(), selectedId: null };
+const petTypeLabels = [
+  { value: "all", label: "全部宠物" },
+  { value: "cat", label: "猫猫" },
+  { value: "dog", label: "狗狗" }
+];
+const state = { petType: "all", category: "全部食品", cart: loadCart(), selectedId: null };
 
 const productGrid = document.querySelector("#productGrid");
 const bestsellerGrid = document.querySelector("#bestsellerGrid");
-const filters = document.querySelector("#filters");
+const petFilters = document.querySelector("#petFilters");
+const foodFilters = document.querySelector("#foodFilters");
 const cartItems = document.querySelector("#cartItems");
 const cartTotal = document.querySelector("#cartTotal");
 const cartCount = document.querySelector("#cartCount");
@@ -211,16 +228,28 @@ function renderAccount() {
   accountLabel.textContent = user ? user.name : "登录 / 注册";
 }
 
+function matchesPet(product) {
+  return state.petType === "all" || product.petTypes.includes(state.petType);
+}
+
 function renderFilters() {
-  filters.innerHTML = categoryLabels.map(category => `
+  petFilters.innerHTML = petTypeLabels.map(petType => `
+    <button class="filter-button pet-filter-button ${state.petType === petType.value ? "active" : ""}" type="button" data-pet-type="${petType.value}" aria-pressed="${state.petType === petType.value}">${petType.label}</button>
+  `).join("");
+
+  const availableCategories = ["全部食品", ...new Set(
+    products.filter(matchesPet).map(product => product.category)
+  )];
+  foodFilters.innerHTML = availableCategories.map(category => `
     <button class="filter-button ${state.category === category ? "active" : ""}" type="button" data-category="${category}" aria-pressed="${state.category === category}">${category}</button>
   `).join("");
 }
 
 function renderProducts() {
-  const visibleProducts = state.category === "全部"
-    ? products
-    : products.filter(product => product.category === state.category);
+  const visibleProducts = products.filter(product =>
+    matchesPet(product) &&
+    (state.category === "全部食品" || product.category === state.category)
+  );
 
   productGrid.innerHTML = visibleProducts.map(product => `
     <article class="product-card" data-id="${product.id}">
@@ -349,12 +378,20 @@ function renderCart() {
   }).join("");
 }
 
-filters.addEventListener("click", event => {
+petFilters.addEventListener("click", event => {
+  const button = event.target.closest("[data-pet-type]");
+  if (!button) return;
+  state.petType = button.dataset.petType;
+  state.category = "全部食品";
+  renderFilters();
+  renderProducts();
+});
+
+foodFilters.addEventListener("click", event => {
   const button = event.target.closest("[data-category]");
   if (!button) return;
   state.category = button.dataset.category;
   renderFilters();
-renderBestsellers();
   renderProducts();
 });
 

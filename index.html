@@ -71,7 +71,16 @@
         </div>
         <p>从每日加餐到训练奖励，按它真正需要的来挑。</p>
       </div>
-      <div class="filters" id="filters" role="group" aria-label="商品分类筛选"></div>
+      <div class="filter-groups">
+        <div class="filter-group">
+          <span class="filter-label">先选宠物</span>
+          <div class="filters pet-filters" id="petFilters" role="group" aria-label="宠物分类筛选"></div>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">再选食品</span>
+          <div class="filters" id="foodFilters" role="group" aria-label="食品分类筛选"></div>
+        </div>
+      </div>
       <div class="product-grid" id="productGrid" aria-live="polite"></div>
     </section>
 
