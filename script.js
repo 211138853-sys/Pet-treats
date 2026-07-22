@@ -169,10 +169,25 @@ const products = [
   }
 ];
 
+const reviewMeta = {
+  "chicken-jerky": { rating: 4.9, count: 386, quote: "鸡肉纤维很干爽，拆袋香但不油手，家里两只都很爱吃。" },
+  "chicken-strips": { rating: 4.8, count: 214, quote: "软条很好撕，给老年犬做小块奖励很方便。" },
+  "freeze-chicken": { rating: 4.9, count: 302, quote: "复水拌粮很香，冻干块大小也比较均匀。" },
+  "freeze-liver": { rating: 4.7, count: 165, quote: "适口性特别强，训练召回时很管用。" },
+  "dental-kelp": { rating: 4.8, count: 188, quote: "硬度适中，吃完没有碎屑掉得到处都是。" },
+  "dental-milk": { rating: 4.7, count: 121, quote: "奶香自然，咀嚼时间比普通零食更久。" },
+  "training-duo": { rating: 4.9, count: 433, quote: "颗粒小，连续奖励不会一下吃太多，训练很顺手。" },
+  "training-heart": { rating: 4.8, count: 176, quote: "心形小粒不粘手，出门随身带很方便。" },
+  "duck-medallions": { rating: 4.8, count: 198, quote: "鸭肉片厚薄刚好，挑嘴的小家伙也愿意吃。" },
+  "salmon-freeze": { rating: 4.9, count: 241, quote: "鱼肉纹理很清楚，掰碎拌粮接受度很高。" },
+  "goat-cheese": { rating: 4.7, count: 109, quote: "奶味不冲，小方块拿来做安静奖励正合适。" },
+  "pumpkin-biscuit": { rating: 4.8, count: 276, quote: "饼干酥脆但不硬，造型也很可爱。" }
+};
 const STORAGE_KEYS = {
   users: "heye_users_v1",
   session: "heye_session_v1",
-  cart: "heye_cart_v1"
+  cart: "heye_cart_v1",
+  reviews: "heye_reviews_v1"
 };
 
 const petTypeLabels = [
@@ -193,9 +208,43 @@ const checkout = document.querySelector("#checkout");
 const toast = document.querySelector("#toast");
 const accountLabel = document.querySelector("#accountLabel");
 const addressForm = document.querySelector("#addressForm");
+const recommendationGrid = document.querySelector("#recommendationGrid");
+const recommendationReason = document.querySelector("#recommendationReason");
+const reviewForm = document.querySelector("#reviewForm");
 
 const formatPrice = value => `¥${value.toFixed(0)}`;
 const getProduct = id => products.find(product => product.id === id);
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, character => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  })[character]);
+}
+
+function getLocalReviews() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEYS.reviews)) || []; }
+  catch { return []; }
+}
+
+function saveLocalReviews(reviews) {
+  localStorage.setItem(STORAGE_KEYS.reviews, JSON.stringify(reviews));
+}
+
+function getReviewStats(productId) {
+  const base = reviewMeta[productId];
+  const local = getLocalReviews().filter(review => review.productId === productId);
+  const totalCount = base.count + local.length;
+  const totalScore = base.rating * base.count + local.reduce((sum, review) => sum + review.rating, 0);
+  return { rating: (totalScore / totalCount).toFixed(1), count: totalCount };
+}
+
+function formatReviewSummary(productId) {
+  const stats = getReviewStats(productId);
+  return `★ ${stats.rating} · ${stats.count} 条评价`;
+}
 function getUsers() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEYS.users)) || []; }
   catch { return []; }
@@ -265,12 +314,75 @@ function renderProducts() {
         </div>
         <strong class="product-price">${formatPrice(product.price)}</strong>
         <p class="product-desc">${product.selling.split("。")[0]}。</p>
+        <p class="product-rating">${formatReviewSummary(product.id)}</p>
 
       </div>
     </article>
   `).join("");
 }
 
+function renderRecommendations() {
+  const user = currentUser();
+  if (!user) {
+    recommendationReason.textContent = "登录并完善宠物档案，获得更合适的零食推荐。";
+    recommendationGrid.innerHTML = `
+      <div class="recommendation-empty">
+        <strong>先告诉我们它是谁</strong>
+        <p>记录宠物类型、年龄和需要避开的食材，推荐会更靠谱。</p>
+        <a class="button button-primary" href="account.html">登录 / 注册</a>
+      </div>
+    `;
+    return;
+  }
+
+  if (!user.pet) {
+    recommendationReason.textContent = "完善主宠档案后，这里会按它的情况自动选品。";
+    recommendationGrid.innerHTML = `
+      <div class="recommendation-empty">
+        <strong>还差一份主宠档案</strong>
+        <p>填写宠物类型和过敏源，只需要一分钟。</p>
+        <a class="button button-primary" href="account.html">完善宠物档案</a>
+      </div>
+    `;
+    return;
+  }
+
+  const pet = user.pet;
+  const allergyTokens = (pet.allergies || "").split(/[、，,\s]+/).filter(Boolean);
+  const recommendations = products
+    .filter(product => product.petTypes.includes(pet.type))
+    .filter(product => !allergyTokens.some(token => `${product.name}${product.ingredients}`.includes(token)))
+    .sort((first, second) => second.monthlySales - first.monthlySales)
+    .slice(0, 4);
+
+  const petTypeName = pet.type === "cat" ? "猫猫" : "狗狗";
+  recommendationReason.textContent = `为${pet.name}推荐 · ${petTypeName}${allergyTokens.length ? ` · 已避开${allergyTokens.join("、")}` : ""}`;
+
+  if (!recommendations.length) {
+    recommendationGrid.innerHTML = `
+      <div class="recommendation-empty">
+        <strong>暂时没有完全匹配的商品</strong>
+        <p>可以调整需要避开的食材，或查看全部商品。</p>
+        <a class="button button-primary" href="account.html">调整宠物档案</a>
+      </div>
+    `;
+    return;
+  }
+
+  recommendationGrid.innerHTML = recommendations.map(product => `
+    <article class="recommendation-card">
+      <button class="recommendation-image" type="button" data-detail="${product.id}" aria-label="查看${product.name}详情">
+        <img src="${product.image}" alt="${product.name}">
+      </button>
+      <div class="recommendation-info">
+        <p>${product.category} · ${product.spec}</p>
+        <h3>${product.name}</h3>
+        <span>${formatReviewSummary(product.id)}</span>
+        <div><strong>${formatPrice(product.price)}</strong><button type="button" data-add="${product.id}" aria-label="将${product.name}加入购物车">+</button></div>
+      </div>
+    </article>
+  `).join("");
+}
 function renderBestsellers() {
   const bestsellers = [...products]
     .sort((first, second) => second.monthlySales - first.monthlySales)
@@ -306,6 +418,40 @@ function closeOverlay(id) {
   }
 }
 
+function renderProductReviews(product) {
+  const stats = getReviewStats(product.id);
+  const localReviews = getLocalReviews()
+    .filter(review => review.productId === product.id)
+    .sort((first, second) => second.date.localeCompare(first.date));
+  document.querySelector("#detailRating").textContent = `★ ${stats.rating} · ${stats.count} 条`;
+
+  const localMarkup = localReviews.map(review => `
+    <article class="review-item">
+      <div><strong>${escapeHtml(review.userName)}</strong><span>${"★".repeat(review.rating)}${"☆".repeat(5 - review.rating)}</span></div>
+      <p>${escapeHtml(review.text)}</p>
+      <small>${escapeHtml(review.date)}</small>
+    </article>
+  `).join("");
+  const base = reviewMeta[product.id];
+  const baseMarkup = `
+    <article class="review-item">
+      <div><strong>近期已购用户</strong><span>${"★".repeat(Math.round(base.rating))}${"☆".repeat(5 - Math.round(base.rating))}</span></div>
+      <p>${escapeHtml(base.quote)}</p>
+      <small>精选评价</small>
+    </article>
+  `;
+  document.querySelector("#detailReviewList").innerHTML = localMarkup + baseMarkup;
+
+  const user = currentUser();
+  reviewForm.hidden = !user;
+  document.querySelector("#reviewLoginHint").hidden = Boolean(user);
+  document.querySelector("#reviewError").textContent = "";
+  if (user) {
+    const existing = localReviews.find(review => review.userId === user.id);
+    document.querySelector("#reviewRating").value = existing ? String(existing.rating) : "5";
+    document.querySelector("#reviewText").value = existing ? existing.text : "";
+  }
+}
 function openProduct(id) {
   const product = getProduct(id);
   if (!product) return;
@@ -320,6 +466,7 @@ function openProduct(id) {
   document.querySelector("#detailSales").textContent = `月售 ${product.monthlySales.toLocaleString("zh-CN")} 份`;
   document.querySelector("#detailIngredients").textContent = product.ingredients;
   document.querySelector("#detailPrice").textContent = formatPrice(product.price);
+  renderProductReviews(product);
   openOverlay("productOverlay");
 }
 
@@ -422,6 +569,15 @@ bestsellerGrid.addEventListener("click", event => {
   const detailTarget = event.target.closest("[data-detail]");
   if (detailTarget) openProduct(detailTarget.dataset.detail);
 });
+recommendationGrid.addEventListener("click", event => {
+  const addButton = event.target.closest("[data-add]");
+  if (addButton) {
+    addToCart(addButton.dataset.add);
+    return;
+  }
+  const detailTarget = event.target.closest("[data-detail]");
+  if (detailTarget) openProduct(detailTarget.dataset.detail);
+});
 cartItems.addEventListener("click", event => {
   const quantityButton = event.target.closest("[data-quantity]");
   const removeButton = event.target.closest("[data-remove]");
@@ -432,6 +588,38 @@ cartItems.addEventListener("click", event => {
   }
 });
 
+reviewForm.addEventListener("submit", event => {
+  event.preventDefault();
+  const user = currentUser();
+  const product = getProduct(state.selectedId);
+  if (!user || !product) return;
+
+  const textValue = document.querySelector("#reviewText").value.trim();
+  const rating = Number(document.querySelector("#reviewRating").value);
+  const error = document.querySelector("#reviewError");
+  if (textValue.length < 4) {
+    error.textContent = "评价至少写 4 个字。";
+    return;
+  }
+
+  const reviews = getLocalReviews();
+  const existingIndex = reviews.findIndex(review => review.productId === product.id && review.userId === user.id);
+  const review = {
+    productId: product.id,
+    userId: user.id,
+    userName: user.name,
+    rating,
+    text: textValue,
+    date: new Date().toISOString().slice(0, 10)
+  };
+  if (existingIndex >= 0) reviews[existingIndex] = review;
+  else reviews.push(review);
+  saveLocalReviews(reviews);
+  renderProductReviews(product);
+  renderProducts();
+  renderRecommendations();
+  showToast(existingIndex >= 0 ? "评价已更新" : "感谢你的评价");
+});
 document.querySelector("#detailAdd").addEventListener("click", () => {
   if (state.selectedId) addToCart(state.selectedId);
 });
@@ -511,6 +699,7 @@ renderBestsellers();
 renderProducts();
 renderCart();
 renderAccount();
+renderRecommendations();
 
 if (new URLSearchParams(location.search).get("checkout") === "1" && state.cart.size) {
   beginCheckout();

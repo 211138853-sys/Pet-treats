@@ -20,6 +20,25 @@ function saveUsers(users) {
   localStorage.setItem(STORAGE_KEYS.users, JSON.stringify(users));
 }
 
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, character => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  })[character]);
+}
+
+function updateCurrentUser(updater) {
+  const id = localStorage.getItem(STORAGE_KEYS.session);
+  const users = getUsers();
+  const index = users.findIndex(user => user.id === id);
+  if (index < 0) return null;
+  users[index] = updater(users[index]);
+  saveUsers(users);
+  return users[index];
+}
 function digestPassword(password) {
   let hash = 2166136261;
   for (const character of password) {
@@ -66,8 +85,19 @@ function renderProfile() {
   document.querySelector("#profilePhone").textContent = user.phone;
   const address = user.address;
   document.querySelector("#savedAddress").innerHTML = address
-    ? `<small>默认收货地址</small><strong>${address.recipient} · ${address.phone}</strong><p>${address.region} ${address.detail}</p>`
+    ? `<small>默认收货地址</small><strong>${escapeHtml(address.recipient)} · ${escapeHtml(address.phone)}</strong><p>${escapeHtml(address.region)} ${escapeHtml(address.detail)}</p>`
     : `<small>默认收货地址</small><strong>暂未保存</strong><p>结算时填写后会自动保存到当前账户。</p>`;
+
+  const pet = user.pet || { name: "", type: "dog", breed: "", age: "", weight: "", allergies: "" };
+  document.querySelector("#petName").value = pet.name;
+  document.querySelector("#petType").value = pet.type;
+  document.querySelector("#petBreed").value = pet.breed || "";
+  document.querySelector("#petAge").value = pet.age || "";
+  document.querySelector("#petWeight").value = pet.weight || "";
+  document.querySelector("#petAllergies").value = pet.allergies || "";
+  document.querySelector("#petProfileStatus").textContent = user.pet
+    ? `已保存：${pet.name} · ${pet.type === "cat" ? "猫猫" : "狗狗"}${pet.allergies ? ` · 避开${pet.allergies}` : ""}`
+    : "尚未保存宠物档案。";
 }
 
 loginTab.addEventListener("click", () => switchMode("login"));
@@ -103,7 +133,7 @@ registerForm.addEventListener("submit", event => {
   else if (password !== confirm) error.textContent = "两次输入的密码不一致。";
   else if (users.some(user => user.phone === phone)) error.textContent = "该手机号已经注册，请直接登录。";
   else {
-    const user = { id: `user_${Date.now()}`, name, phone, passwordDigest: digestPassword(password), address: null };
+    const user = { id: `user_${Date.now()}`, name, phone, passwordDigest: digestPassword(password), address: null, pet: null };
     users.push(user);
     saveUsers(users);
     localStorage.setItem(STORAGE_KEYS.session, user.id);
@@ -113,6 +143,20 @@ registerForm.addEventListener("submit", event => {
   }
 });
 
+document.querySelector("#petProfileForm").addEventListener("submit", event => {
+  event.preventDefault();
+  const pet = {
+    name: document.querySelector("#petName").value.trim(),
+    type: document.querySelector("#petType").value,
+    breed: document.querySelector("#petBreed").value.trim(),
+    age: document.querySelector("#petAge").value ? Number(document.querySelector("#petAge").value) : "",
+    weight: document.querySelector("#petWeight").value ? Number(document.querySelector("#petWeight").value) : "",
+    allergies: document.querySelector("#petAllergies").value.trim()
+  };
+  updateCurrentUser(user => ({ ...user, pet }));
+  renderProfile();
+  showToast("宠物档案已保存");
+});
 document.querySelector("#logoutButton").addEventListener("click", () => {
   localStorage.removeItem(STORAGE_KEYS.session);
   switchMode("login");

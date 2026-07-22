@@ -149,6 +149,22 @@ h1 { font-size: clamp(56px, 7vw, 100px); margin-bottom: 22px; font-weight: 700; 
 .bestseller-info > strong { align-self: end; font-size: 18px; }
 .bestseller-add { grid-column: 1 / -1; min-height: 38px; border: 1px solid var(--ink); color: var(--ink); background: transparent; cursor: pointer; font-size: 20px; }
 .bestseller-add:hover { color: var(--white); background: var(--ink); }
+.recommendations-section { max-width: var(--container); margin: 0 auto; padding: 88px 24px 0; }
+.recommendation-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.recommendation-card { min-width: 0; background: var(--cream); }
+.recommendation-image { width: 100%; aspect-ratio: 1 / .82; border: 0; padding: 0; overflow: hidden; background: transparent; cursor: pointer; }
+.recommendation-image img { height: 100%; object-fit: cover; transition: transform .4s ease; }
+.recommendation-card:hover .recommendation-image img { transform: scale(1.035); }
+.recommendation-info { padding: 16px; }
+.recommendation-info > p { margin: 0 0 4px; color: var(--berry); font-size: 11px; font-weight: 700; }
+.recommendation-info h3 { margin: 0 0 7px; font-family: "STSong", "SimSun", serif; font-size: 20px; }
+.recommendation-info > span { color: var(--ink-soft); font-size: 11px; }
+.recommendation-info > div { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; }
+.recommendation-info > div strong { font-size: 18px; }
+.recommendation-info > div button { width: 36px; height: 36px; border: 0; color: var(--white); background: var(--ink); cursor: pointer; font-size: 20px; }
+.recommendation-empty { grid-column: 1 / -1; min-height: 210px; padding: 36px; display: grid; place-content: center; justify-items: start; background: var(--sage-light); }
+.recommendation-empty strong { font-family: "STSong", "SimSun", serif; font-size: 28px; }
+.recommendation-empty p { max-width: 520px; color: var(--ink-soft); }
 .products-section { max-width: var(--container); margin: 0 auto; padding: 100px 24px 120px; }
 .section-heading { display: flex; justify-content: space-between; align-items: end; gap: 40px; margin-bottom: 36px; }
 .section-heading h2, .story-band h2 { font-size: clamp(36px, 4vw, 58px); margin: 0; }
@@ -174,6 +190,7 @@ h1 { font-size: clamp(56px, 7vw, 100px); margin-bottom: 22px; font-weight: 700; 
 .product-name { margin: 0; font-family: "STSong", "SimSun", serif; font-size: 22px; cursor: pointer; }
 .product-desc { grid-column: 1 / -1; color: var(--ink-soft); font-size: 13px; margin: 0; }
 .product-price { font-size: 18px; font-weight: 700; align-self: end; }
+.product-rating { grid-column: 1 / -1; margin: -2px 0 0; color: var(--ink-soft); font-size: 12px; }
 
 .story-band { background: var(--sage); color: var(--white); padding: 80px max(24px, calc((100vw - var(--container)) / 2)); display: grid; grid-template-columns: 1.2fr .8fr; gap: 80px; align-items: end; }
 .story-band h2 { margin: 0; max-width: 650px; }
@@ -196,6 +213,27 @@ footer p { margin: 0; }
 .detail-meta small, .ingredients small { display: block; color: var(--ink-soft); font-size: 11px; margin-bottom: 4px; }
 .ingredients { border-top: 1px solid var(--line); padding-top: 20px; }
 .ingredients p { margin: 0; }
+.product-reviews { margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--line); }
+.reviews-heading { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 12px; }
+.reviews-heading small { color: var(--ink-soft); font-size: 11px; }
+.reviews-heading h3 { margin: 2px 0 0; font-family: "STSong", "SimSun", serif; font-size: 24px; }
+.reviews-heading > strong { color: var(--berry); font-size: 14px; }
+.review-list { display: grid; gap: 8px; max-height: 190px; overflow-y: auto; }
+.review-item { padding: 12px; background: var(--cream); }
+.review-item > div { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.review-item > div span { color: var(--berry); font-size: 11px; }
+.review-item p { margin: 5px 0; color: var(--ink-soft); font-size: 12px; }
+.review-item small { color: #7b847f; font-size: 10px; }
+.review-form { margin-top: 12px; }
+.review-form-row { display: grid; grid-template-columns: 92px 1fr; gap: 10px; }
+.review-form label { display: grid; gap: 5px; color: var(--ink-soft); font-size: 11px; }
+.review-form select, .review-form textarea { width: 100%; border: 1px solid var(--line); border-radius: 4px; padding: 8px 10px; color: var(--ink); background: var(--white); font: inherit; outline: none; }
+.review-form select { height: 42px; }
+.review-form textarea { min-height: 64px; resize: vertical; }
+.review-error { min-height: 17px; margin: 3px 0; color: #a83f4d; font-size: 11px; }
+.review-submit { min-height: 38px; padding: 0 16px; color: var(--ink); background: transparent; border-color: var(--ink); }
+.review-login-hint { margin: 12px 0 0; color: var(--ink-soft); font-size: 12px; }
+.review-login-hint a { color: var(--berry); font-weight: 700; }
 .detail-footer { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-top: auto; padding-top: 30px; }
 .detail-price { font-size: 27px; }
 .icon-button { width: 42px; height: 42px; display: grid; place-items: center; border: 0; background: transparent; color: var(--ink); font-size: 30px; cursor: pointer; }
@@ -248,6 +286,7 @@ footer p { margin: 0; }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
 @media (max-width: 900px) {
+  .recommendation-grid { grid-template-columns: repeat(2, 1fr); }
   .site-header { grid-template-columns: 1fr auto; }
   .nav-links { display: none; }
   .header-actions { justify-self: end; display: flex; align-items: center; gap: 24px; }
@@ -296,6 +335,8 @@ footer p { margin: 0; }
   .trust-strip article { padding: 12px 9px; }
   .trust-strip strong { font-size: 16px; }
   .trust-strip span { font-size: 11px; }
+  .recommendations-section { padding: 64px 16px 0; }
+  .recommendation-grid { grid-template-columns: 1fr; }
   .products-section { padding: 72px 16px 80px; }
   .section-heading { display: block; margin-bottom: 28px; }
   .section-heading h2 { font-size: 36px; margin-bottom: 13px; }
@@ -312,6 +353,7 @@ footer p { margin: 0; }
   .product-modal { max-height: calc(100svh - 24px); }
   .detail-media { aspect-ratio: 1.35 / 1; }
   .detail-content { padding: 26px 20px 20px; }
+  .review-form-row { grid-template-columns: 1fr; }
   .detail-content h2 { font-size: 31px; margin-bottom: 10px; }
   .detail-selling { font-size: 14px; line-height: 1.7; }
   .detail-meta { margin: 14px 0; }
@@ -330,6 +372,7 @@ footer p { margin: 0; }
 }
 
 @media (max-width: 900px) {
+  .recommendation-grid { grid-template-columns: repeat(2, 1fr); }
   .bestseller-grid { grid-template-columns: 1fr; }
   .bestseller-card { grid-template-columns: 34% 66%; }
 }

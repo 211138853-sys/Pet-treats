@@ -63,6 +63,16 @@
       </div>
       <div class="bestseller-grid" id="bestsellerGrid"></div>
     </section>
+    <section class="recommendations-section" aria-labelledby="recommendations-title">
+      <div class="section-heading compact-heading">
+        <div>
+          <p class="eyebrow ink">FOR YOUR PET</p>
+          <h2 id="recommendations-title">为它挑选</h2>
+        </div>
+        <p id="recommendationReason">登录并完善宠物档案，获得更合适的零食推荐。</p>
+      </div>
+      <div class="recommendation-grid" id="recommendationGrid"></div>
+    </section>
     <section class="products-section" id="products" aria-labelledby="products-title">
       <div class="section-heading">
         <div>
@@ -113,6 +123,22 @@
           <span><small>近期热度</small><strong id="detailSales"></strong></span>
         </div>
         <div class="ingredients"><small>主要成分</small><p id="detailIngredients"></p></div>
+        <section class="product-reviews" aria-labelledby="reviewsTitle">
+          <div class="reviews-heading">
+            <div><small>真实反馈</small><h3 id="reviewsTitle">买家评价</h3></div>
+            <strong id="detailRating"></strong>
+          </div>
+          <div class="review-list" id="detailReviewList"></div>
+          <form class="review-form" id="reviewForm">
+            <div class="review-form-row">
+              <label><span>评分</span><select id="reviewRating"><option value="5">5 分</option><option value="4">4 分</option><option value="3">3 分</option><option value="2">2 分</option><option value="1">1 分</option></select></label>
+              <label class="review-text"><span>评价内容</span><textarea id="reviewText" maxlength="120" placeholder="说说适口性、气味或包装体验" required></textarea></label>
+            </div>
+            <p class="review-error" id="reviewError" role="alert"></p>
+            <button class="button review-submit" type="submit">提交评价</button>
+          </form>
+          <p class="review-login-hint" id="reviewLoginHint" hidden>登录后可以分享它的试吃体验。<a href="account.html">去登录</a></p>
+        </section>
         <div class="detail-footer">
           <strong class="detail-price" id="detailPrice"></strong>
           <button class="button button-primary" id="detailAdd" type="button">加入购物车</button>
