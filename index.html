@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="禾野宠食，高品质天然宠物零食。">
   <title>禾野宠食｜认真做一口好零食</title>
-  <link rel="stylesheet" href="styles.css?v=7">
+  <link rel="stylesheet" href="styles.css?v=6">
 </head>
 <body>
   <header class="site-header" id="top">
@@ -28,43 +28,52 @@
   </header>
 
   <main>
-    <section class="hero-shop" aria-labelledby="hero-title">
-      <div class="hero-shop-copy">
-        <p class="eyebrow ink">NATURAL TREATS · HAPPY TAILS</p>
-        <h1 id="hero-title">把零食柜，<br><em>开到它心里去</em></h1>
-        <p>真肉、简单配方，还有一点明目张胆的偏爱。每天一小口，就是你们之间的小暗号。</p>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-content">
+        <p class="eyebrow">NATURAL TREATS · DAILY JOY</p>
+        <h1 id="hero-title">今天也要<br><em>好好吃零食</em></h1>
+        <p class="hero-copy">把真肉、阳光和一点点偏爱，装进它每天都期待的小奖励里。</p>
         <div class="hero-actions">
-          <a class="button button-primary" href="#products">逛逛今日零食</a>
-          <button class="button button-light" id="heroCart" type="button">打开购物袋</button>
+          <a class="button button-primary" href="#products">挑选今日奖励</a>
+          <button class="button button-light" id="heroCart" type="button">看看购物袋</button>
         </div>
         <ul class="hero-notes" aria-label="品牌核心卖点">
-          <li>真肉优先</li><li>成分透明</li><li>小批鲜制</li>
+          <li>人食级原料</li>
+          <li>0 香精色素</li>
+          <li>小批次鲜制</li>
         </ul>
       </div>
-      <div class="mascot-stage">
-        <div class="mascot-stage-heading">
-          <span>今日值班店员</span>
-          <small>先选毛孩子，再挑它爱吃的</small>
-        </div>
-        <div class="mascot-pair">
-          <button type="button" data-pet-shortcut="cat">
-            <img src="assets/images/q-cat.jpg" alt="Q版猫咪店员">
-            <span><small>CAT TREATS</small><strong>猫猫的小食柜</strong><b>去看看 →</b></span>
-          </button>
-          <button type="button" data-pet-shortcut="dog">
-            <img src="assets/images/q-dog.jpg" alt="Q版狗狗店员">
-            <span><small>DOG TREATS</small><strong>狗狗的奖励站</strong><b>去看看 →</b></span>
-          </button>
-        </div>
-        <div class="treat-ribbon"><span>原切肉</span><span>冻干</span><span>洁齿</span><span>训练奖励</span></div>
-      </div>
+      <figure class="hero-photo">
+        <img src="assets/images/hero-warm-crop.jpg" alt="主人陪伴金毛犬享用天然宠物零食">
+        <figcaption>和你在一起的每一天，都值得好好吃饭。</figcaption>
+      </figure>
+      <aside class="hero-pets" aria-label="按宠物快速选购">
+        <button class="pet-portrait pet-portrait-cat" type="button" data-pet-shortcut="cat">
+          <img src="assets/images/q-cat.jpg" alt="Q版猫咪头像">
+          <span><small>FOR CATS</small><strong>猫猫专区</strong></span>
+        </button>
+        <button class="pet-portrait pet-portrait-dog" type="button" data-pet-shortcut="dog">
+          <img src="assets/images/q-dog.jpg" alt="Q版狗狗头像">
+          <span><small>FOR DOGS</small><strong>狗狗专区</strong></span>
+        </button>
+      </aside>
     </section>
 
-    <section class="trust-strip" id="promise" aria-label="选材标准">
-      <article><b>01</b><strong>看得见真肉</strong><span>拒绝模糊肉粉</span></article>
-      <article><b>02</b><strong>配方尽量短</strong><span>少一点没必要</span></article>
-      <article><b>03</b><strong>按宠物来挑</strong><span>猫狗需求不同</span></article>
-      <article><b>04</b><strong>好吃也安心</strong><span>奖励没有负担</span></article>
+    <section class="pet-picker" id="promise" aria-labelledby="pet-picker-title">
+      <div>
+        <p class="eyebrow ink">A LITTLE TREAT FOR</p>
+        <h2 id="pet-picker-title">今天给谁挑零食？</h2>
+      </div>
+      <button type="button" data-pet-shortcut="cat"><img src="assets/images/q-cat.jpg" alt=""><span><strong>猫猫</strong><small>冻干 · 原切肉</small></span></button>
+      <button type="button" data-pet-shortcut="dog"><img src="assets/images/q-dog.jpg" alt=""><span><strong>狗狗</strong><small>洁齿 · 训练奖励</small></span></button>
+      <button class="pet-picker-all" type="button" data-pet-shortcut="all"><span><strong>全部毛孩子</strong><small>慢慢逛，不偏心</small></span><b aria-hidden="true">→</b></button>
+    </section>
+
+    <section class="trust-strip" aria-label="选材标准">
+      <article><strong>真肉优先</strong><span>配方首位看得见</span></article>
+      <article><strong>轻度加工</strong><span>保留食材本味与营养</span></article>
+      <article><strong>成分透明</strong><span>每一口都清清楚楚</span></article>
+      <article><strong>犬猫友好</strong><span>按体型与场景挑选</span></article>
     </section>
 
     <section class="bestsellers-section" aria-labelledby="bestsellers-title">
@@ -226,6 +235,6 @@
     <em>查看购物车</em>
   </button>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="script.js?v=7"></script>
+  <script src="script.js?v=6"></script>
 </body>
 </html>
